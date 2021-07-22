@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="index.js"></script>
+    <title>Inclusive</title>
+</head>
+<body>
+    <div id="inner" class="big-shadow">
+        <h1 id="title">What do you want to listen to?</h1>
+        <div id="expanded-container">
+            <div id="left-container">
+                <input id="search" class="small-shadow" type="search" placeholder="🔍 I'm looking for something specific" autocomplete="off">
+                <div id="search-results" class="big-shadow">
+                    <div class="search-result selected">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png">
+                        <div class="song-description">
+                            <div class="title">asdf</div>
+                            <div class="artist">asdf</div>
+                        </div>
+                    </div>
+                    <div class="search-result">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png">
+                        <div class="song-description">
+                            <div class="title">asdf</div>
+                            <div class="artist">asdf</div>
+                        </div>
+                    </div>
+                    <div class="search-result">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png">
+                        <div class="song-description">
+                            <div class="title">asdf</div>
+                            <div class="artist">asdf</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="idk-container">
+                    <span id="or">or</span>
+                    <!-- <span class="material-icons">search</span> -->
+                    <button id="idk">I Don't Know</button>
+                </div>
+            </div>
+            <div id="right-container">
+                <div class="container">
+                    <img id="thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png">
+                    <div id="card-title">Song Title</div>
+                    <div id="card-artist">By artist</div>
+                </div>
+            </div>
+        </div>
+        <button id="exit-expanded">Exit <span class="material-icons">close</span></button>
+        <div id="player">
+            <button><span class="material-icons">skip_previous</span></button>
+            <button><span class="material-icons">play_arrow</span></button>
+            <button><span class="material-icons">skip_next</span></button>
+            <input id="seek" type="range">
+        </div>
+    </div>
+
+</body>
+</html>
