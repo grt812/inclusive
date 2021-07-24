@@ -4,6 +4,18 @@ $(()=>{
     //
     // });
 
+    // $(".svg-icon").each(()=>{
+    //
+    // });
+    $(".svg-container").mouseenter(function(){
+        let tempSrc = $(this).find("img").attr("src");
+        $(this).find("img").attr("src", tempSrc.slice(0, tempSrc.indexOf(".") - 1) + "2.svg");
+    });
+    $(".svg-container").mouseleave(function(){
+        let tempSrc = $(this).find("img").attr("src");
+        $(this).find("img").attr("src", tempSrc.slice(0, tempSrc.indexOf(".") - 1) + "1.svg");
+    });
+
     function expand(){
         expanded = true;
         $("#inner").addClass("expand");

@@ -14,6 +14,7 @@
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 
 /* Track */
@@ -68,7 +69,7 @@ body{
     height: auto;
     max-height: 600px;
     transition: background 0.5s, width 0.5s, max-height 0.5s, top 0.5s, left 0.5s, border-radius 0.5s, transform 0.25s, box-shadow 0.25s;
-    transition-duration: 1s;
+    transition-duration: 0.5s;
 }
 
 #inner.expand{
@@ -138,11 +139,11 @@ h1, h2, h3, h4, h5, h6{
     font-size: 25px;
 }
 
-button, .recommendation{
+button{
     /* background: rgb(53,255,106); */
     background-color: transparent;
     border: 0;
-    border-radius: 5px;
+    border-radius: 100px;
     padding: 5px 10px;
     color: white;
     font-size: 20px;
@@ -153,21 +154,21 @@ button, .recommendation{
     transition: transform 0.25s;
 }
 
-.recommendation > *{
+/* .recommendation > *{
     color: white;
-}
+} */
 
-button:hover, .recommendation:hover{
+button:hover{
     /* background: rgba(53,214,255,1); */
     background-position: 100% 0;
     /* background: linear-gradient(45deg, rgba(53,214,255,1) 0%, rgba(193,68,255,1) 100%); */
 }
 
-button:active, .recommendation:active{
+button:active{
     transform: scale(0.98);
 }
 
-button::before, .recommendation::before{
+button::before{
     content: "";
     position: absolute;
     width: 200%;
@@ -179,7 +180,7 @@ button::before, .recommendation::before{
     transition: left 0.25s;
 }
 
-button:hover::before, .recommendation:hover::before{
+button:hover::before{
     left: -100%;
 }
 
@@ -192,24 +193,68 @@ button:hover::before, .recommendation:hover::before{
     display: none;
 } */
 
+
+#idk-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+#hotrn{
+    grid-column: 1 / 4;
+}
+
 .recommendation{
     /* width: 100%; */
-    /* border-radius: 10px; */
+    border-radius: 10px;
     margin: 15px 0;
     box-shadow: var(--big-shadow);
-    border-radius: 30px;
+    /* border-radius: 50px; */
+    /* width: 50px; */
     padding: 15px;
     font-size: 25px;
+    margin: 10px;
+    position: relative;
+    background-color: var(--bg-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    /* margin-right: 20px; */
+
     /* text-align: center; */
     /* box-shadow: var(--big-shadow); */
+    transition: transform 0.25s;
+}
+
+.recommendation:hover{
+    transform: translate(0, -10px);
+}
+
+.recommendation:active{
+    transform: translate(0, -5px);
 }
 
 .recommendation::after{
     content: "";
 }
 
+.recommendation .svg-icon{
+    /* flex-grow: 1; */
+    vertical-align: bottom;
+}
+.recommendation span{
+    text-align: right;
+    margin-right: 10px;
+    flex-grow: 1;
+}
+
+
 /* #inner.expand #idk{
     width: var(--inner-length);
+} */
+
+/* #idk-container{
+
 } */
 
 /* #idk-container > *{
