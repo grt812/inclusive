@@ -18,6 +18,13 @@
         <h1 id="title">What do you want to listen to?</h1>
         <div id="expanded-container">
             <div id="left-container">
+                <div class="container">
+                    <img id="thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png">
+                    <div id="card-title">Song Title</div>
+                    <div id="card-artist">By artist</div>
+                </div>
+            </div>
+            <div id="right-container">
                 <input id="search" class="small-shadow" type="search" placeholder="🔍 I'm looking for something specific" autocomplete="off">
                 <div id="search-results" class="big-shadow">
                     <div class="search-result selected">
@@ -43,16 +50,39 @@
                     </div>
                 </div>
                 <div id="idk-container">
-                    <span id="or">or</span>
-                    <!-- <span class="material-icons">search</span> -->
-                    <button id="idk">I Don't Know</button>
+                    <div class="recommendation">
+                        Made for you
+                    </div>
+                    <div id="idk" class="recommendation">
+                        Trending
+                    </div>
+                    <!-- <button>Made for you</button>
+                    <button id="idk">Trending</button> -->
+                    <!-- <span id="or">or</span> -->
+
                 </div>
-            </div>
-            <div id="right-container">
-                <div class="container">
-                    <img id="thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png">
-                    <div id="card-title">Song Title</div>
-                    <div id="card-artist">By artist</div>
+                <div id="queue" class="container">
+                    <div class="search-result selected">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png">
+                        <div class="song-description">
+                            <div class="title">asdf</div>
+                            <div class="artist">asdf</div>
+                        </div>
+                    </div>
+                    <div class="search-result">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png">
+                        <div class="song-description">
+                            <div class="title">asdf</div>
+                            <div class="artist">asdf</div>
+                        </div>
+                    </div>
+                    <div class="search-result">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png">
+                        <div class="song-description">
+                            <div class="title">asdf</div>
+                            <div class="artist">asdf</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

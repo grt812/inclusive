@@ -11,6 +11,27 @@
     --big-radius: 20px; */
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-two);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gradient-one);
+}
+
 *{
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
@@ -45,9 +66,9 @@ body{
     box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
     height: auto;
-    max-height: 400px;
+    max-height: 600px;
     transition: background 0.5s, width 0.5s, max-height 0.5s, top 0.5s, left 0.5s, border-radius 0.5s, transform 0.25s, box-shadow 0.25s;
-    transition-duration: 0.5s;
+    transition-duration: 1s;
 }
 
 #inner.expand{
@@ -55,15 +76,15 @@ body{
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     transform: none;
     background-color: rgb(0, 0, 0, .2);
-    backdrop-filter: blur(4px);
+    /* backdrop-filter: blur(4px); */
     border-radius: 0;
     box-sizing: border-box;
     padding: 40px;
     overflow: auto;
-    max-height: 100%;
+    max-height: 100vh;
 }
 
 /* #inner.expand *{
@@ -84,6 +105,7 @@ body{
     border-radius: 20px;
     padding: 15px;
     margin: 15px;
+    width: auto;
 }
 
 h1{
@@ -94,7 +116,7 @@ h2{
     font-size: 40px;
 }
 
-h2{
+h3{
     font-size: 30px;
 }
 
@@ -116,7 +138,7 @@ h1, h2, h3, h4, h5, h6{
     font-size: 25px;
 }
 
-button{
+button, .recommendation{
     /* background: rgb(53,255,106); */
     background-color: transparent;
     border: 0;
@@ -131,17 +153,21 @@ button{
     transition: transform 0.25s;
 }
 
-button:hover{
+.recommendation > *{
+    color: white;
+}
+
+button:hover, .recommendation:hover{
     /* background: rgba(53,214,255,1); */
     background-position: 100% 0;
     /* background: linear-gradient(45deg, rgba(53,214,255,1) 0%, rgba(193,68,255,1) 100%); */
 }
 
-button:active{
+button:active, .recommendation:active{
     transform: scale(0.98);
 }
 
-button::before{
+button::before, .recommendation::before{
     content: "";
     position: absolute;
     width: 200%;
@@ -153,30 +179,45 @@ button::before{
     transition: left 0.25s;
 }
 
-button:hover::before{
+button:hover::before, .recommendation:hover::before{
     left: -100%;
 }
 
-#or{
+/* #or{
     text-align: center;
     display: block;
 }
 
 #inner.expand #or{
     display: none;
-}
+} */
 
-#idk{
-    width: 100%;
+.recommendation{
+    /* width: 100%; */
     /* border-radius: 10px; */
     margin: 15px 0;
+    box-shadow: var(--big-shadow);
+    border-radius: 30px;
+    padding: 15px;
+    font-size: 25px;
+    /* text-align: center; */
+    /* box-shadow: var(--big-shadow); */
 }
 
-#inner.expand #idk{
-    /* width: var(--inner-length); */
+.recommendation::after{
+    content: "";
 }
 
-input[type="search"]{
+/* #inner.expand #idk{
+    width: var(--inner-length);
+} */
+
+/* #idk-container > *{
+    border-radius: 40px;
+    padding: 10px;
+} */
+
+#search{
     border: 0;
     border-radius: 50px;
     padding: 5px 10px;
@@ -185,6 +226,10 @@ input[type="search"]{
     width: 100%;
     outline: 0;
     margin: 15px 0;
+    top: 0px;
+    /* right: 50px; */
+    /* position: sticky; */
+    z-index: 1;
 }
 
 #inner.expand input[type="search"]{
@@ -192,9 +237,7 @@ input[type="search"]{
 }
 
 #inner.expand #search-results{
-    position: static;
-    /* width: var(--inner-length); */
-
+    position: fixed !important;
 }
 
 #inner.expand #expanded-container{
@@ -202,16 +245,22 @@ input[type="search"]{
 }
 
 #left-container{
-    width: var(--inner-length);
+    /* width: var(--inner-length); */
+    /* flex-grow: 1; */
+    display: none;
+    position: sticky;
+    top: 0;
 }
 
 #right-container{
-    display: none;
+    position: relative;
+    flex-grow: 1;
+    /* transform: scale(1); */
 }
 
-#inner.expand #right-container{
+#inner.expand #left-container{
     display: block;
-    flex-grow: 1;
+    /* width: 400px; */
 }
 
 ::placeholder {
@@ -229,18 +278,19 @@ input[type="search"]{
 #search-results{
     border-radius: 20px;
     padding: 15px;
-    position: fixed;
+    position: absolute;
+    /* position: fixed; */
+    z-index: 1;
     background-color: white;
-    width: calc(100% - 40px);
+    width: 100%;
     box-sizing: border-box;
     z-index: 1;
     max-height: 50vh;
     overflow: auto;
+    left: 0;
+    right: 0;
+    transform: translate(0);
     /* display: none; */
-}
-
-#inner.expand #search-results{
-    width: auto !important;
 }
 
 .search-result{
@@ -292,7 +342,8 @@ input[type="search"]{
     width: 100%;
     background-color: white;
     /* height: 80px; */
-    bottom: -15px;
+    /* bottom: -25px; */
+    bottom: 0px;
     /* position: fixed; */
     border-radius: 10px;
     display: none;
@@ -331,5 +382,5 @@ input[type="search"]{
 #exit-expanded{
     position: fixed;
     top: 10px;
-    right: 10px;
+    right: 25px;
 }

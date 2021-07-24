@@ -7,25 +7,43 @@ $(()=>{
     function expand(){
         expanded = true;
         $("#inner").addClass("expand");
-        $("#search-results").show(0);
+        // $("#search-results").show(0);
         // $("#player").show();
         // $("#or").hide();
-        $("#idk").text("Play Something New");
+        // $("#idk").text("Play Something New");
         $("#exit-expanded").show(0);
+        // $("#left-container").show();
+        $("#queue").show(0);
+        $("#idk-container").hide();
+        adjustSearch();
     }
 
     function contract(){
         expanded = false;
         $("#inner").removeClass("expand");
         // $("#player").hide();
-        $("#search-results").hide();
+        // $("#search-results").hide();
         // $("#or").show();
-        $("#idk").text("I Don't Know");
+        // $("#idk").text("I Don't Know");
         $("#exit-expanded").hide(0);
+        $("#queue").hide(0);
+        $("#idk-container").show();
+        adjustSearch();
+    }
+
+    function adjustSearch(){
+        $("#search-results").width($("#search").width());
+        if(expanded){
+            $("#search-results").css("left", $("#search").offset().left);
+        } else {
+            $("#search-results").css("left", 0);
+        }
     }
 
     function init(){
         contract();
+        $("#search-results").hide();
+        adjustSearch();
     }
 
     init();
@@ -42,19 +60,24 @@ $(()=>{
         contract();
     });
 
+    $(window).resize(()=>{
+        adjustSearch();
+    });
 
 
     $(document).on("focus click",(e)=>{
-        if(!expanded){
-            if(e.target === document.getElementById("search")){
-                // $("#idk-container").hide();
-                $("#search-results").show();
-            } else {
-                // console.log(e.target);
-                $("#search-results").hide();
-                // $("#idk-container").show();
-            }
+        if(e.target === document.getElementById("search")){
+            // $("#idk-container").hide();
+            adjustSearch();
+            $("#search-results").show();
+        } else {
+            // console.log(e.target);
+            $("#search-results").hide();
+            // $("#idk-container").show();
         }
+        // if(!expanded){
+        //
+        // }
     });
 
 
