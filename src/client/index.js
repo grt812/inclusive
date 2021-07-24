@@ -1,5 +1,7 @@
 $(()=>{
     let expanded = false;
+
+    var audioElement = document.createElement('audio');
     // $("#search").focus(()=>{
     //
     // });
@@ -28,6 +30,7 @@ $(()=>{
         $("#queue").show(0);
         $("#idk-container").hide();
         adjustSearch();
+        playAudio("https://www.kozco.com/tech/organfinale.wav");
     }
 
     function contract(){
@@ -91,6 +94,50 @@ $(()=>{
         //
         // }
     });
+
+
+    //Audio javascript
+    let modifiedPosition = false;
+    $("#pausePlay").click(function(){
+        if(audioElement.paused){
+            audioElement.currentTime = $("#seek").val();
+            audioElement.play();
+            modifiedPosition = true;
+        } else {
+            audioElement.pause();
+        }
+    });
+
+    audioElement.addEventListener("canplay",function(){
+        let tempSeconds = (Math.floor(audioElement.duration % 60)).toLocaleString(undefined, {minimumIntegerDigits: 2});
+        let tempMinutes = Math.floor(audioElement.duration / 60);
+        $("#duration").text(tempMinutes+":"+tempSeconds);
+        $("#seek").attr("max", audioElement.duration);
+        this.play();
+    });
+
+    audioElement.addEventListener("timeupdate",function(){
+        let tempSeconds = (Math.floor(audioElement.currentTime % 60).toLocaleString(undefined, {minimumIntegerDigits: 2}));
+        let tempMinutes = Math.floor(audioElement.currentTime / 60);
+        $("#current").text(tempMinutes+":"+tempSeconds);
+        $("#seek").val(audioElement.currentTime);
+    });
+
+    $("#seek").mousedown(function(){
+        audioElement.pause();
+        modifiedPosition = true;
+    });
+
+    function playAudio(source){
+        audioElement.setAttribute("src", source);
+        audioElement.load();
+        audioElement.play();
+
+    }
+
+    // $(document).click(function(){
+    //     playAudio("https://www.w3schools.com/jsref/horse.ogg");
+    // });
 
 
 });
