@@ -1,0 +1,6 @@
+flask
+pafy
+youtube-dl
+youtube-search-python
+pytube
+requests
