@@ -3,6 +3,7 @@
     --gradient-one: linear-gradient(45deg, rgba(53,214,255,1) 0%, rgba(193,68,255,1) 100%);
     --gradient-two: linear-gradient(45deg, rgba(53,255,106,1) 0%, rgba(53,214,255,1) 50%);
     --gradient-three: linear-gradient(45deg, rgba(53,255,106,1) 0%, rgba(53,214,255,1) 50%, rgba(193,68,255,1) 100%);
+    --gradient-three-tp: linear-gradient(45deg, rgba(53,255,106,0.5) 0%, rgba(53,214,255,0.5) 50%, rgba(193,68,255,0.5) 100%);
     --small-shadow: 2px 2px 3px 1px rgba(0, 0, 0, 0.1);
     --big-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.1);
     --bg-color: white;
@@ -93,6 +94,25 @@ body{
     max-height: 100vh;
 }
 
+#thumbnail{
+    animation: none;
+}
+
+@keyframes loading {
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+#thumbnail.loading{
+    width: 150px;
+    height: 150px;
+    animation: loading 2s linear infinite;
+}
+
 /* #inner.expand *{
     color: white;
 } */
@@ -112,6 +132,10 @@ body{
     padding: 15px;
     margin: 15px;
     width: auto;
+}
+
+.no-bottom{
+    margin-bottom: 0;
 }
 
 h1{
@@ -199,10 +223,16 @@ button:hover::before{
 } */
 
 
-#idk-container{
+#for-you{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 }
+
+#explore{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
 
 #hotrn{
     grid-column: 1 / 4;
@@ -251,6 +281,38 @@ button:hover::before{
     text-align: right;
     margin-right: 10px;
     flex-grow: 1;
+}
+
+.recommendation.bg{
+    background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+}
+
+#temp1{
+    background: url("https://www.roadiemusic.com/blog/wp-content/uploads/2020/02/Is-Rock-Music-Dead.png");
+}
+
+#temp2{
+    background: url("https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/billie-eilish-mega707061-001-1602700090.jpg")
+}
+
+.recommendation.bg::before{
+    content: "";
+    width: 100%;
+    height: 100%;
+    left: 0;
+    z-index: -1;
+    position: absolute;
+    background: var(--gradient-three-tp);
+}
+
+.recommendation.bg > *{
+    color: white;
+    z-index: 0;
 }
 
 
@@ -306,12 +368,17 @@ button:hover::before{
     display: none;
     position: sticky;
     top: 0;
+    max-width: 50vw;
 }
 
 #right-container{
     position: relative;
     flex-grow: 1;
     /* transform: scale(1); */
+}
+
+#queue{
+    margin: 0;
 }
 
 #inner.expand #left-container{
@@ -336,7 +403,7 @@ button:hover::before{
     padding: 15px;
     position: absolute;
     /* position: fixed; */
-    z-index: 1;
+    z-index: 9999;
     background-color: white;
     width: 100%;
     box-sizing: border-box;
@@ -354,7 +421,9 @@ button:hover::before{
     user-select: none;
     cursor: pointer;
     display: flex;
+    position: relative;
     border-radius: 5px;
+    z-index: 9999;
     padding: 5px;
     /* margin-bottom: 5px; */
     transition: background 0.25s;
@@ -370,6 +439,7 @@ button:hover::before{
 
 .search-result img{
     width: 50px;
+    height: 50px;
     margin-right: 5px;
     /* vertical-align: bottom; */
 }
@@ -391,6 +461,14 @@ button:hover::before{
 
 .song-description .title{
     font-weight: 400;
+}
+
+#search-shortcuts{
+    display: block;
+}
+
+#inner.expand #search-shortcuts{
+    display: none;
 }
 
 #player{

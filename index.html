@@ -15,40 +15,52 @@
 </head>
 <body>
     <div id="inner" class="big-shadow">
-        <h1 id="title">What do you want to listen to?</h1>
+        <!-- <h1 id="title">What do you want to listen to?</h1> -->
         <div id="expanded-container">
             <div id="left-container">
                 <div class="container">
-                    <img id="thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/330px-Image_created_with_a_mobile_phone.png">
-                    <div id="card-title">Song Title</div>
-                    <div id="card-artist">By artist</div>
+                    <img id="thumbnail" class="loading" src="assets/loading.svg">
+                    <div id="card-title">Loading...</div>
+                    <div id="card-artist">Loading...</div>
                 </div>
             </div>
             <div id="right-container">
                 <input id="search" class="small-shadow" type="search" placeholder="🔍 I'm looking for something specific" autocomplete="off">
                 <div id="search-results" class="big-shadow"></div>
-                <div id="idk-container">
-                    <div class="recommendation svg-container">
-                        <img class="svg-icon" src="assets/genres1.svg" width="50">
-                        <span>Genres</span>
+                <div id="search-shortcuts">
+                    <h3 class="no-bottom">For You</h3>
+                    <div id="for-you">
+                        <div class="recommendation svg-container bg" id="temp1">
+                            <img class="svg-icon" src="assets/genres1.svg" width="50">
+                            <span>Genre</span>
+                        </div>
+                        <div class="recommendation svg-container bg" id="temp2">
+                            <img class="svg-icon" src="assets/artists1.svg" width="50">
+                            <span>Artist</span>
+                        </div>
+                        <div class="recommendation svg-container bg">
+                            <img class="svg-icon" src="assets/songs1.svg" width="50">
+                            <span>Generated Playlist</span>
+                        </div>
+                        <!-- <button>Made for you</button>
+                        <button id="idk">Trending</button> -->
+                        <!-- <span id="or">or</span> -->
+                        <!-- <button id="hotrn" class="svg-container"><img class="svg-icon" src="assets/hotnow1.svg" width="20"> Hot Right Now</button> -->
+                        <!-- <img src="" -->
                     </div>
-                    <div id="idk" class="recommendation svg-container">
-                        <img class="svg-icon" src="assets/songs1.svg" width="50">
-                        <span>Songs</span>
+                    <h3 class="no-bottom">Explore</h3>
+                    <div id="explore">
+                        <div id="idk" class="recommendation svg-container">
+                            <img class="svg-icon" src="assets/songs1.svg" width="50">
+                            <span>Genres</span>
+                        </div>
+                        <div class="recommendation svg-container">
+                            <img class="svg-icon" src="assets/hotnow1.svg" width="50">
+                            <span>Trending</span>
+                        </div>
                     </div>
-                    <div class="recommendation svg-container">
-                        <img class="svg-icon" src="assets/artists1.svg" width="50">
-                        <span>Artists</span>
-                    </div>
-                    <!-- <button>Made for you</button>
-                    <button id="idk">Trending</button> -->
-                    <!-- <span id="or">or</span> -->
-                    <button id="hotrn" class="svg-container"><img class="svg-icon" src="assets/hotnow1.svg" width="20"> Hot Right Now</button>
-                    <!-- <img src="" -->
                 </div>
-                <div id="queue" class="container">
-
-                </div>
+                <div id="queue" class="container"></div>
             </div>
         </div>
         <button id="exit-expanded">Exit <span class="material-icons">close</span></button>

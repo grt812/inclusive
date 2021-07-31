@@ -23,9 +23,9 @@ $(()=>{
         $("#exit-expanded").show(0);
         // $("#left-container").show();
         $("#queue").show(0);
-        $("#idk-container").hide();
+        $("#for-you").hide();
         adjustSearch();
-        playAudio("https://www.kozco.com/tech/organfinale.wav");
+        // playAudio("https://www.kozco.com/tech/organfinale.wav");
     }
 
     function contract(){
@@ -37,7 +37,7 @@ $(()=>{
         // $("#idk").text("I Don't Know");
         $("#exit-expanded").hide(0);
         $("#queue").hide(0);
-        $("#idk-container").show();
+        $("#for-you").show();
         adjustSearch();
         audioElement.pause();
     }
@@ -59,9 +59,9 @@ $(()=>{
 
     init();
 
-    $(".search-result").click(()=>{
-        expand();
-    });
+    // $(".search-result").click(()=>{
+    //     expand();
+    // });
 
     $("#idk").click(()=>{
         expand();
@@ -78,7 +78,7 @@ $(()=>{
 
     $(document).on("focus click",(e)=>{
         if(e.target === document.getElementById("search")){
-            // $("#idk-container").hide();
+            // $("#for-you").hide();
             adjustSearch();
             $("#search-results").show();
             if($("#search").val().trim() !== ""){
@@ -88,7 +88,7 @@ $(()=>{
             // console.log(e.target);
             $("#search-results").hide();
             $("#inner").removeClass("searching");
-            // $("#idk-container").show();
+            // $("#for-you").show();
         }
         // if(!expanded){
         //
@@ -104,9 +104,11 @@ $(()=>{
         if(audioElement.paused){
             audioElement.currentTime = $("#seek").val();
             audioElement.play();
+            $(this).html(`<span class="material-icons">pause</span>`)
             // modifiedPosition = true;
         } else {
             audioElement.pause();
+            $(this).html(`<span class="material-icons">play_arrow</span>`)
         }
     });
 
@@ -141,6 +143,7 @@ $(()=>{
 
     $("#seek").mouseup(function(){
         dragging = false;
+        audioElement.play();
     });
 
     $("#seek").mousemove(function(){
@@ -163,13 +166,46 @@ $(()=>{
         }
     });
 
+    $("#search").keydown(function(e){
+        if(e.which === 38){
+            let tempIndex = $(".search-result.selected").index();
+            if(tempIndex <= 0){
+                $(".search-result.selected").removeClass("selected");
+                $(".search-result").eq($("#search-results").children().length - 1).addClass("selected");
+            } else {
+                $(".search-result.selected").removeClass("selected");
+                $(".search-result").eq(tempIndex - 1).addClass("selected");
+            }
+        } else if(e.which === 40){
+            let tempIndex = $(".search-result.selected").index();
+            console.log("Current Index: "+tempIndex);
+            if(tempIndex >= $("#search-results").children().length - 1){
+                $(".search-result.selected").removeClass("selected");
+                $(".search-result").eq(0).addClass("selected");
+            } else {
+                $(".search-result.selected").removeClass("selected");
+                $(".search-result").eq(tempIndex + 1).addClass("selected");
+            }
+        }
+        setTimeout(function(){
+            $("#search-results").stop(true).animate({scrollTop: $(".search-result.selected").offset().top - $("#search-results").offset().top + $("#search-results").scrollTop() - $("#search-results").height()/2 + $(".search-result.selected").height()/2}, 200);
+        });
+        if(e.which === 13){
+            $(".search-result.selected").trigger("click");
+        }
+    });
+
+
+
+
     function updateSearch(list){
         $("#search-results").html("");
-        list.forEach(function(item){
+        list.forEach(function(item, index){
             console.log("Item: "+ item);
             let artistString = item.artists.length === 1 ? item.artists[0] : item.artists.slice(0, -1).join(", ") + ", "+ item.artists.slice(-1);
+            let artistURI = item.artists.length === 1 ? item.artists[0] : item.artists.slice(0, -1).join(",") + ","+ item.artists.slice(-1);
             let templateHTML = `
-            <div class="search-result" data-title="${item.name}" data-artists="${artistString}">
+            <div class="search-result new ${index === 0 ? "selected" : ""}" data-title="${item.name}" data-artists="${artistString}">
                 <img src="${item.image}">
                 <div class="song-description">
                     <div class="title">${item.name}</div>
@@ -178,37 +214,59 @@ $(()=>{
             </div>
             `;
             $("#search-results").append(templateHTML);
+            $(".new").click(()=>{
+                expand();
+                $("#thumbnail").attr("src", "/assets/loading.svg");
+                $("#thumbnail").addClass("loading");
+                $("#card-title").text(item.name);
+                $("#card-artist").text(artistString);
+                $.get(`/song?name=${item.name}&artists=${artistURI}&id=${item.id}`).done(function(response){
+                    let responseObject = JSON.parse(response);
+                    playAudio(responseObject.audio)
+                    $("#thumbnail").attr("src", responseObject.img);
+                    $("#thumbnail").removeClass("loading");
+                });
+            });
+            $(".new").one("click", function(){
+                //Queue Limit?
+                $.get(`/recommend?id=${item.id}&limit=20`, function(response){
+                    // alert(response);
+                });
+            });
+            $(".new").removeClass("new");
         });
     }
 
 
-    $("#search").on("keyup", function(){
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(function(){
-            if($("#search").val().trim() !== ""){
-                $.get("/search?q="+$("#search").val(), function(response) {
-                  let doubleQuotes = response.replace(/'/g, '"')
-                  // stringList.map(function(e, i){
-                  //     if(i === 0){
-                  //         return e+"}";
-                  //     } else if(i === stringList.length - 1){
-                  //         return "{"+e;
-                  //     } else {
-                  //         return "{"+e+"}"
-                  //     }
-                  // });
-                  // console.log(stringList);
-                  // let songList = stringList.map(e => JSON.parse(e));
-                  // updateSearch(songList);
-                  console.log("Response: "+doubleQuotes);
-                  songList = JSON.parse(doubleQuotes.replaceAll("{{apostrophe}}", "'").replaceAll("{{double}}", "'"));
-                  console.log("list length: "+songList.length)
-                  // console.log("Song List: "+songList);
-                  updateSearch(songList);
-                  // $("#")
-                });
-            }
-        }, 500);
+    $("#search").on("keyup", function(e){
+        if(e.which !== 37 && e.which !== 38 && e.which !== 39 && e.which !== 40 && e.which !== 13){
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(function(){
+                if($("#search").val().trim() !== ""){
+                    $.get("/search?q="+$("#search").val(), function(response) {
+                      let doubleQuotes = response.replace(/'/g, '"')
+                      // stringList.map(function(e, i){
+                      //     if(i === 0){
+                      //         return e+"}";
+                      //     } else if(i === stringList.length - 1){
+                      //         return "{"+e;
+                      //     } else {
+                      //         return "{"+e+"}"
+                      //     }
+                      // });
+                      // console.log(stringList);
+                      // let songList = stringList.map(e => JSON.parse(e));
+                      // updateSearch(songList);
+                      console.log("Response: "+doubleQuotes);
+                      songList = JSON.parse(doubleQuotes.replaceAll("{{apostrophe}}", "'").replaceAll("{{double}}", "'"));
+                      console.log("list length: "+songList.length)
+                      // console.log("Song List: "+songList);
+                      updateSearch(songList);
+                      // $("#")
+                    });
+                }
+            }, 500);
+        }
     });
 
     // $(document).click(function(){

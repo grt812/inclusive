@@ -37,13 +37,19 @@ from flask import render_template
 from flask import request
 # from flask_restful import Resource, Api
 
+#YouTube Search and Download
+from youtubesearchpython import VideosSearch
+from pytube import YouTube
+import pafy
+import urllib
+
 app = Flask(__name__, static_url_path='', static_folder='')
 # api = Api(app)
 
 #Authorize Spotify
 def requestAuthorization():
     clientAndSecret = base64.b64encode((keys.spotifyClient+":"+keys.spotifySecret).encode('ascii')).decode('ascii')
-    print("Authorization Header: "+"Basic "+clientAndSecret)
+    # print("Authorization Header: "+"Basic "+clientAndSecret)
     authorization = requests.post('https://accounts.spotify.com/api/token', headers = {"Authorization": "Basic "+clientAndSecret}, data = {"grant_type": "client_credentials"})
     accessToken = json.loads(authorization.text)["access_token"]
     return accessToken
@@ -59,17 +65,18 @@ def search():
 
         #Format relevant data
         # finalResult = []
+        #TO-Do: Add function for replacing apostraphes and double quotes
         for item in searchDictionary["tracks"]["items"]:
             artistList = [i["name"].replace("'", "{{apostrophe}}").replace('"', "{{double}}") for i in item["artists"]]
-            modifiedItem = {"name":item["name"].replace("'", "{{apostrophe}}").replace('"', "{{double}}"), "image": item["album"]["images"][2]["url"].replace("'", "{{apostrophe}}").replace('"', "{{double}}"), "artists": artistList}
+            modifiedItem = {"name":item["name"].replace("'", "{{apostrophe}}").replace('"', "{{double}}"), "image": item["album"]["images"][2]["url"].replace("'", "{{apostrophe}}").replace('"', "{{double}}"), "artists": artistList, "id": item["id"]}
             finalResult.append(modifiedItem)
 
         finalResult = ",".join([str(i) for i in finalResult])
-        print("Joined version:",finalResult)
+        # print("Joined version:",finalResult)
         # finalResult = json.dumps(finalResult)
         # print("Double Quotes:",finalResult)
         finalResult = "[" + finalResult + "]"
-        print("Array version:",finalResult)
+        # print("Array version:",finalResult)
     # print(finalResult)
 
     return finalResult
@@ -78,7 +85,49 @@ def search():
 #Handle song request
 @app.route('/song', methods=['GET'])
 def song():
-    return None
+    #request.args["name"]
+    #request.args["artists"]
+    #request.args["id"] (for image)
+    # print("requesting song: "+request.args["name"])
+    # print("artists: "+request.args["artists"])
+
+    #Get High Res Image
+    authToken = requestAuthorization()
+    searchResults = requests.get("https://api.spotify.com/v1/tracks/"+request.args["id"], headers = {"Authorization":"Bearer "+authToken})
+    imageURL = json.loads(searchResults.text)["album"]["images"][1]["url"];
+
+    songSearch = VideosSearch(request.args["name"] + " "+request.args["artists"].replace(",", " "), limit = 1)
+    # print("songLink: "+str(songSearch.result()))
+    songLink = songSearch.result()["result"][0]["link"]
+    print("yt link: "+songLink)
+    # 404 Error here????
+    # videoStream = YouTube(songLink).streams
+    #
+    # #.filter(only_audio=True).order_by("abr").desc().first()
+    # print(videoStream)
+    #return base64.b64encode(videoStream)
+
+    #Attempting pafy library instead
+    audioStream = pafy.new(songLink).getbestaudio()
+
+    print("Audio Stream URL:",audioStream.url)
+    #Base 64 unnecessary?
+    # base64Audio = base64.b64encode(requests.get(audioStream.url).content)
+    # print("Stream Base64:",base64Audio)
+    # return '{"audio": "'+base64Audio.decode("utf-8")+'", "ext": "'+audioStream.extension+'" ,"img":"'+imageURL+'"}'
+    # "ext": "'+audioStream.extension+'" ,
+    tempResponse = '{"audio": "'+audioStream.url+'", "img":"'+imageURL+'"}'
+    print("Temp Response: "+tempResponse)
+    return tempResponse
+
+#Returns a list of songs that are similar to one song
+#To-Do for Ethan
+@app.route('/recommend', methods=['GET'])
+def recommend():
+    #request.args["id"] for spotify api
+    #request.args["limit"]
+    #request.args["repeats"] -optional for continuing queue
+    return "Response"
 
 #Static Hosting
 @app.route('/')
