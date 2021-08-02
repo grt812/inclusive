@@ -283,22 +283,32 @@ button:hover::before{
     flex-grow: 1;
 }
 
-.recommendation.bg{
-    background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png");
+/*.recommendation.bg{
+  opacity:0.75;
+    background: url("https://thesmartlocal.com/wp-content/uploads/2019/11/CD-Shops-SG-2.jpg")
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
     overflow: hidden;
     z-index: 0;
-}
+}*/
+
 
 #temp1{
-    background: url("https://www.roadiemusic.com/blog/wp-content/uploads/2020/02/Is-Rock-Music-Dead.png");
+  opacity:0.75;
+    background: url("https://images.unsplash.com/photo-1621419203051-f4e463849784?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80");
 }
 
 #temp2{
-    background: url("https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/billie-eilish-mega707061-001-1602700090.jpg")
+  opacity:0.75;
+    background: url("https://ggsc.s3.amazonaws.com/images/uploads/Singing_needs_credit.jpg")
 }
+
+#temp3{
+  opacity:0.75;
+    background: url("https://images.pexels.com/photos/2531133/pexels-photo-2531133.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")
+}
+
 
 .recommendation.bg::before{
     content: "";
