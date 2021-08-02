@@ -276,7 +276,15 @@ button:hover::before{
 .recommendation .svg-icon{
     /* flex-grow: 1; */
     vertical-align: bottom;
+    position:relative;
+      animation: mymove 5s infinite;
 }
+
+@keyframes mymove {
+  from {left:0px}
+  to {left:20px}
+}
+
 .recommendation span{
     text-align: right;
     margin-right: 10px;
