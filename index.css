@@ -381,6 +381,41 @@ button:hover::before{
     margin: 0;
 }
 
+.queue-item{
+    margin-bottom: 10px;
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    position: relative;
+    border-radius: 5px;
+    padding: 5px;
+    /* margin-bottom: 5px; */
+    transition: background 0.25s;
+}
+
+.queue-item:hover{
+    background-color: rgba(240, 240, 240, 1);
+}
+
+.queue-item:active{
+    background-color: rgba(235, 235, 235, 1);
+}
+
+.queue-item img{
+    width: 50px;
+    height: 50px;
+    margin-right: 5px;
+    /* vertical-align: bottom; */
+}
+
+.queue-item.selected{
+    background: var(--gradient-two);
+}
+
+.queue-item.selected *{
+    color: white;
+}
+
 #inner.expand #left-container{
     display: block;
     /* width: 400px; */
@@ -481,7 +516,8 @@ button:hover::before{
     /* position: fixed; */
     border-radius: 10px;
     display: none;
-    padding: 10px
+    padding: 10px;
+    box-shadow: var(--small-shadow);
 }
 
 #player button{
