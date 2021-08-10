@@ -624,7 +624,9 @@ width: 1525px;
 height: 1033px;
 left: 0px;
 top: -9px;
-background: url(https://content.api.news/v3/images/bin/c3e0515b62127060d648037703314f7b);
+background-repeat:no-repeat;
+background-size:cover;
+background: url(https://themusicnetwork.com/wp-content/uploads/The-Kid-LAROI-and-Justin-Bieber-Stay.png);
 mix-blend-mode: hard-light;
 opacity: 0.2;
 }
