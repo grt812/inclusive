@@ -69,6 +69,7 @@ body{
     padding: 20px;
     height: auto;
     max-height: 600px;
+    box-sizing: border-box;
     transition: background 0.5s, width 0.5s, max-height 0.5s, top 0.5s, left 0.5s, border-radius 0.5s, transform 0.25s, box-shadow 0.25s;
     transition-duration: 0.5s;
 }
@@ -255,6 +256,7 @@ button:hover::before{
     align-items: center;
     user-select: none;
     /* margin-right: 20px; */
+    overflow: hidden;
 
     /* text-align: center; */
     /* box-shadow: var(--big-shadow); */
@@ -277,7 +279,7 @@ button:hover::before{
     /* flex-grow: 1; */
     vertical-align: bottom;
     position:relative;
-      animation: mymove 5s infinite;
+      /* animation: mymove 5s infinite; */
 }
 
 @keyframes mymove {
@@ -397,6 +399,8 @@ button:hover::before{
 
 #queue{
     margin: 0;
+    max-height: 400px;
+    overflow: auto;
 }
 
 .queue-item{

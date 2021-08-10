@@ -188,7 +188,9 @@ $(()=>{
             }
         }
         setTimeout(function(){
-            $("#search-results").stop(true).animate({scrollTop: $(".search-result.selected").offset().top - $("#search-results").offset().top + $("#search-results").scrollTop() - $("#search-results").height()/2 + $(".search-result.selected").height()/2}, 200);
+            if($(".search-result.selected").length){
+                $("#search-results").stop(true).animate({scrollTop: $(".search-result.selected").offset().top - $("#search-results").offset().top + $("#search-results").scrollTop() - $("#search-results").height()/2 + $(".search-result.selected").height()/2}, 200);
+            }
         }, 10);
         if(e.which === 13){
             $(".search-result.selected").trigger("click");

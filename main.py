@@ -46,6 +46,17 @@ import urllib
 
 #Read cell data
 import csv
+#Handle track dates
+from datetime import datetime
+
+#Thanks to https://stackoverflow.com/questions/23581128/how-to-format-date-string-via-multiple-formats-in-python for help with date formatting
+def parseDate(text):
+    for fmt in ('%Y-%m-%d', '%Y', '%m/%d/%Y'):
+        try:
+            return datetime.strptime(text, fmt)
+        except (ValueError, OSError) as e:
+            pass
+    raise ValueError('No valid date format found!')
 
 app = Flask(__name__, static_url_path='', static_folder='')
 # api = Api(app)
@@ -131,12 +142,12 @@ def song():
 ID = 0
 NAME = 1
 # POPULARITY = 2
+DURATION = 3
 # EXPLICIT = 4
 # ARTISTS = 5
 # ID_ARTISTS = 6
-# RELEASE = 7
-DURATION = 3
-ACOUSTICNESS = 8
+RELEASE = 7
+DANCEABILITY = 8
 ENERGY = 9
 KEY = 10
 LOUDNESS = 11
@@ -149,21 +160,23 @@ VALENCE = 17
 TEMPO = 18
 TIME_SIGNATURE = 19
 
-DURATION_WEIGHT = 0.01 * 0.001
-ACOUSTICNESS_WEIGHT = 0.1
-ENERGY_WEIGHT = 0.1
-KEY_WEIGHT = 0.05
-LOUDNESS_WEIGHT = 0.1
-MODE_WEIGHT = 0.1
-SPEECHINESS_WEIGHT = 0.1
-ACOUSTICNESS_WEIGHT = 0.1
-INSTRUMENTALNESS_WEIGHT = 0.1
-LIVENESS_WEIGHT = 0.02
-VALENCE_WEIGHT = 0.1
-TEMPO_WEIGHT = 0.01
-TIME_SIGNATURE_WEIGHT= 0.1
+RELEASE_WEIGHT = 0.75
+DURATION_WEIGHT = 0.05 * 0.001
+DANCEABILITY_WEIGHT = 1
+ACOUSTICNESS_WEIGHT = 1
+ENERGY_WEIGHT = 1
+KEY_WEIGHT = 0
+LOUDNESS_WEIGHT = 1
+MODE_WEIGHT = 1
+SPEECHINESS_WEIGHT = 1
+ACOUSTICNESS_WEIGHT = 1
+INSTRUMENTALNESS_WEIGHT = 1
+LIVENESS_WEIGHT = 0.2
+VALENCE_WEIGHT = 1
+TEMPO_WEIGHT = 0.1
+TIME_SIGNATURE_WEIGHT= 1
 
-SAMPLE_SIZE = 1000
+SAMPLE_SIZE = 2000
 
 @app.route('/recommend', methods=['GET'])
 def recommend():
@@ -175,8 +188,15 @@ def recommend():
     #Get Song ID
     authToken = requestAuthorization()
     startAnalysis = requests.get("https://api.spotify.com/v1/audio-features/"+request.args["id"], headers = {"Authorization":"Bearer "+authToken})
+    startSong = requests.get("https://api.spotify.com/v1/tracks/"+request.args["id"], headers = {"Authorization":"Bearer "+authToken})
 
-    startDictionary = json.loads(startAnalysis.text);
+    startDictionary = json.loads(startAnalysis.text)
+    startDate = json.loads(startSong.text)["album"]["release_date"]
+    startYear = int(re.sub(r"-\d{1,2}", "",startDate).strip())
+
+    print("Start Song Attributes: ")
+    print(startAnalysis.text)
+    # startSeconds = parseDate(startDate).timestamp()
     # print()
 
     print("Generating sample...")
@@ -187,7 +207,7 @@ def recommend():
     with open("tracks.csv", "rb") as csvfile:
         trackReader = csv.reader(csvfile)
         dataSize = sum(1 for row in csvfile)
-        sampleList = random.sample(range(dataSize), 1000)
+        sampleList = random.sample(range(dataSize), SAMPLE_SIZE)
         print("Data Size:",dataSize)
 
     #Add rows matching random indcies to list
@@ -262,11 +282,20 @@ def recommend():
         attributeList = []
         # Convert ms to s
         # print("STARTING DURATION: "+str(startDictionary["duration_ms"]))
-        # print("DURATION: "+str(decodedSong[DURATION]))
+
+        # print("RELEASE DATE: "+str(decodedSong[RELEASE]))
+        # decodedSongDate = parseDate(str(decodedSong[RELEASE]).strip()).timestamp();
+        # decodedSongDate = datetime.strptime(re.sub(r"-\d{1,2}-\d{1,2}", "", decodedYear, "%Y")
+
+        #Remove insiginficant figures for month and year
+        decodedSongDate = int(re.sub(r"-\d{1,2}", "", decodedSong[RELEASE]).strip())
+        attributeList.append(abs(decodedSongDate - startYear) * RELEASE_WEIGHT)
         attributeList.append(abs(float(decodedSong[DURATION]) - startDictionary["duration_ms"]) * DURATION_WEIGHT)
-        attributeList.append(abs(float(decodedSong[ACOUSTICNESS]) - startDictionary["danceability"]) * ACOUSTICNESS_WEIGHT)
+        attributeList.append(abs(float(decodedSong[DANCEABILITY]) - startDictionary["danceability"]) * DANCEABILITY_WEIGHT)
+        attributeList.append(abs(float(decodedSong[ACOUSTICNESS]) - startDictionary["acousticness"]) * ACOUSTICNESS_WEIGHT)
         attributeList.append(abs(float(decodedSong[ENERGY]) - startDictionary["energy"]) * ENERGY_WEIGHT)
-        attributeList.append(abs(float(decodedSong[KEY]) - startDictionary["key"]) * KEY_WEIGHT)
+        keyDifference = min(abs(float(decodedSong[KEY]) - startDictionary["key"]), 12 - abs(float(decodedSong[KEY]) - startDictionary["key"]))
+        attributeList.append(keyDifference * KEY_WEIGHT)
         attributeList.append(abs(float(decodedSong[LOUDNESS]) - startDictionary["loudness"]) * LOUDNESS_WEIGHT)
         attributeList.append(abs(float(decodedSong[MODE]) - startDictionary["mode"]) * MODE_WEIGHT)
         attributeList.append(abs(float(decodedSong[SPEECHINESS]) - startDictionary["speechiness"]) * SPEECHINESS_WEIGHT)
@@ -284,7 +313,7 @@ def recommend():
         # print("Starting duration: "+str(startDictionary["duration_ms"]))
         # print("Song duration: "+str(song[DURATION]))
         score = sum(attributeList)/len(attributeList)
-        scoreList.append({"score":score, "index":tempIndex, "id":decodedSong[ID]})
+        scoreList.append({"score":score, "index":tempIndex, "id":decodedSong[ID], "scores": attributeList})
         # print("Score: "+str(score))
         tempIndex += 1
 
@@ -308,7 +337,24 @@ def recommend():
 
 
     for score in sortedScoreList:
-        print("Song: "+str(score["name"])+", Artists: "+str(score["artists"])+", Score: "+str(score["score"]))
+        print("Song: "+str(score["name"])+", Artists: "+str(score["artists"]))
+        print("Release: "+str(score["scores"][0]))
+        print("Duration: "+str(score["scores"][1]))
+        print("Danceability: "+str(score["scores"][2]))
+        print("Energy: "+str(score["scores"][3]))
+        print("Key: "+str(score["scores"][4]))
+        print("Loudness: "+str(score["scores"][5]))
+        print("Mode: "+str(score["scores"][6]))
+        print("Speechiness: "+str(score["scores"][7]))
+        print("Acousticness: "+str(score["scores"][8]))
+        print("Instrumentalness: "+str(score["scores"][9]))
+        print("Liveness: "+str(score["scores"][10]))
+        print("Valence: "+str(score["scores"][11]))
+        print("Tempo: "+str(score["scores"][12]))
+        print("Time Signature: "+str(score["scores"][13]))
+
+        print("Total Score:",str(score["score"])+"\n")
+
 
     return ",".join(json.dumps(i) for i in sortedScoreList)
 
