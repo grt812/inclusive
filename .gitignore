@@ -3,3 +3,5 @@ __pycache__
 venv
 tracks.csv
 trending.xlsx
+sampletracks.csv
+sampletracks.xlsx

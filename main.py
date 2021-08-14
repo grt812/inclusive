@@ -196,6 +196,7 @@ def recommend():
 
     print("Start Song Attributes: ")
     print(startAnalysis.text)
+    print("Start Year:"+str(startYear))
     # startSeconds = parseDate(startDate).timestamp()
     # print()
 
@@ -313,7 +314,7 @@ def recommend():
         # print("Starting duration: "+str(startDictionary["duration_ms"]))
         # print("Song duration: "+str(song[DURATION]))
         score = sum(attributeList)/len(attributeList)
-        scoreList.append({"score":score, "index":tempIndex, "id":decodedSong[ID], "scores": attributeList})
+        scoreList.append({"score":score, "index":tempIndex, "id":decodedSong[ID], "scores": attributeList, "decodedSongDate":decodedSongDate})
         # print("Score: "+str(score))
         tempIndex += 1
 
@@ -335,8 +336,8 @@ def recommend():
         sortedScoreList[index]["artists"] = ", ".join((artist["name"] for artist in track["artists"]));
 
 
-
     for score in sortedScoreList:
+        print("Decoded Song Date: "+str(score["decodedSongDate"]))
         print("Song: "+str(score["name"])+", Artists: "+str(score["artists"]))
         print("Release: "+str(score["scores"][0]))
         print("Duration: "+str(score["scores"][1]))
@@ -352,8 +353,8 @@ def recommend():
         print("Valence: "+str(score["scores"][11]))
         print("Tempo: "+str(score["scores"][12]))
         print("Time Signature: "+str(score["scores"][13]))
-
         print("Total Score:",str(score["score"])+"\n")
+
 
 
     return ",".join(json.dumps(i) for i in sortedScoreList)
