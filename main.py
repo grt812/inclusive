@@ -137,7 +137,6 @@ def song():
     return tempResponse
 
 #Returns a list of songs that are similar to one song
-#To-Do for Ethan (ANNOY)
 #Column Constants
 ID = 0
 NAME = 1
